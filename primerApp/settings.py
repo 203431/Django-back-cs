@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+import os
 
 load_dotenv()  # take environment variables from .env.
 
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s@1qq5iae#j1#v_(ns1$wwu(6%rbqcx%u168-+fu#*r)tx@4yt'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -96,13 +97,12 @@ WSGI_APPLICATION = 'primerApp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbDjango',
-        'USER': 'postgres',
-        'PASSWORD': 'jaguares1',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        
+        'ENGINE': os.getenv("ENGINE"),
+        'NAME': os.getenv("NAME"),
+        'USER': os.getenv("USER"),
+        'PASSWORD':os.getenv("PASSWORD"),
+        'HOST':os.getenv("HOST"),
+        'PORT':os.getenv("PORT"),
     }
 }
 
