@@ -20,6 +20,7 @@ class LoginAuth(ObtainAuthToken):
         token,create= Token.objects.get_or_create(user=user)
         return Response({
             'token':token.key,
+            'username': user.username,
             'user_id' : user.pk,
             'email' : user.email,
         })
