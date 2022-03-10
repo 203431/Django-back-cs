@@ -10,7 +10,6 @@ import datetime
 from Profile.models import Profile
 from django.contrib.auth.models import User
 
-
 #IMportacion de serializers
 from Profile.serializers import ProfileSerializer
 
@@ -22,7 +21,6 @@ class ProfileTable(APIView):
         except User.DoesNotExist:
             return 404
     
-        
     def post(self, request):
         if 'url_img' not in request.data:
             raise exceptions.ParseError(
@@ -80,15 +78,45 @@ class ProfileTableDetail(APIView):
                 print("La imagen no existe")
             idResponse.url_img = archivos
             idResponse.save()
-            return Response("Todo salio bien UwU", status=status.HTTP_201_CREATED)
+            return Response("Todo kul",status.HTTP_201_CREATED)
         else:
             return Response("No salio bien")
     
     def delete(self, request, pk):
-        # idUser = request.data['id_user']
         profile = self.get_object(pk)
         if profile != 404:
             profile.url_img.delete(save=True)
             # profile.delete(save=True)
             return Response("Imagen eliminada",status=status.HTTP_204_NO_CONTENT)
         return Response("Imagen no encontrada",status = status.HTTP_400_BAD_REQUEST)
+    
+class UserProfile(APIView):
+    
+    def res_custom(self, user, status):
+        response = {
+            "first_name" : user[0]['first_name'],
+            "last_name" : user[0]['last_name'],
+            "username" : user[0]['username'],
+            "email" : user[0]['email'],
+            "status" : status
+        }
+        return response;
+    
+    def get(self, request, pk, format=None):
+        idResponse = User.objects.filter(id=pk).values()
+        if(idResponse != 404):
+            responseData = self.res_custom(idResponse, status.HTTP_200_OK)
+            return Response(responseData)
+        return("No se encontró el usuario")
+    
+    def put(self, request, pk, format=None):
+        data = request.data
+        user = User.objects.filter(id = pk)
+        user.update(username = data.get('username'))
+        user.update(first_name = data.get('first_name'))
+        user.update(last_name = data.get('last_name'))
+        user.update(email = data.get('email'))
+        user2 = User.objects.filter(id=pk).values()
+        return Response(self.res_custom(user2, status.HTTP_200_OK))
+    
+    
